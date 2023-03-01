@@ -1,0 +1,110 @@
+<div class="container">
+    <div *ngIf="errorsFound" class="errors">
+        <app-form-errors [errors]="errors"></app-form-errors>
+    </div>
+
+    <!-- NOTE: If your formGroup is being constructed within an async function you will need
+        to add a *ngIf='formGroup' to the form tag. -->
+    <form id="create-user" class="form" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <h2>One Singular FormGroup</h2>
+        <div class="form-section">
+            <div class="cell">
+                <mat-form-field>
+                    <mat-label>First Name</mat-label>
+                    <!-- Using the formControlName directive this will handle the binding
+                        between the element and the FormControl in the component as the inputs value
+                        changes so does the FormControls and vice versa -->
+                    <input matInput type="text" formControlName="firstName">
+                </mat-form-field>
+            </div>
+    
+            <div class="cell">
+                <mat-form-field>
+                    <mat-label>Last Name</mat-label>
+                    <input matInput type="text" formControlName="lastName">
+                </mat-form-field>
+            </div>
+    
+            <div class="cell">
+                <mat-form-field>
+                    <mat-label>Address</mat-label>
+                    <input matInput type="text" formControlName="address">
+                </mat-form-field>
+            </div>
+        </div>
+        
+        <div class="contact-container">
+            <!-- When it comes for FormArrays you will need to establist a parent element as the formArrayName
+                this could be a div as I have done here or it could be ng-container or any other containerized element -->
+            <div class="array-container" formArrayName="emails">
+                <!-- Now so long as we are within this 'array-container' div with the formArrayName of 'emails' 
+                    we will have access to the FormControls or FormGroups within the array in this case they are FormGroups -->
+                <!-- What we really want to iterate over here are all the FormGroups. Because these FormGroups are within a FormArray
+                    they do not have an assigned name. In this case the default group name will be the its index within the FormArray -->
+                <div class="form-section" *ngFor="let email of emailControls; let x = index" [formGroupName]="x">
+                    <div class="cell">
+                        <mat-form-field>
+                            <mat-label>Email {{ x + 1 }}</mat-label>
+                            <!-- Now we can access the controls within the FormGroup and bind the element to a FormControl 
+                                as we have done previously -->
+                            <input matInput type="text" formControlName="email">
+                        </mat-form-field>
+                    </div>
+                    
+                    <div class="cell">
+                        <mat-checkbox formControlName="isPrimary">Primary</mat-checkbox>
+                    </div>
+                
+                    <div class="cell">
+                        <button type="button" (click)="removeEmail(x)">Remove Email</button>
+                    </div>  
+                </div>
+                <button type="button" (click)="addEmail()">Add Email</button>
+            </div>
+        
+            <div class="array-container" formArrayName="phoneNumbers">
+                <div class="form-section" *ngFor="let phone of phoneControls; let x = index" [formGroupName]="x">
+                    <div class="cell">
+                        <mat-form-field>
+                            <mat-label>Phone {{ x + 1 }}</mat-label>
+                            <input matInput type="text" formControlName="phoneNumber">
+                        </mat-form-field>
+                    </div>
+                    
+                    <div class="cell">
+                        <mat-checkbox formControlName="isPrimary">Primary</mat-checkbox>
+                    </div>
+                    
+                    <div class="cell">
+                        <button type="button" (click)="removePhoneNumber(x)">Remove Phone</button>
+                    </div>
+                </div>
+                <button type="button" (click)="addPhoneNumber()">Add Phone</button>
+            </div>
+        </div>
+    
+        <div class="form-section">
+            <div class="cell">
+                <mat-form-field>
+                    <mat-label>Class</mat-label>
+                    <!-- One of the advantages about ReactiveForms is that no mater the input element the directive
+                        to bind to the FormControl is always going to be formControlName -->
+                    <mat-select formControlName="class">
+                        <mat-option *ngFor="let class of classes" [value]="class.id">{{ class.name }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            
+            <div class="cell">
+                <mat-form-field>
+                    <mat-label>Level</mat-label>
+                    <input matInput type="number" formControlName="level">
+                </mat-form-field>
+            </div>
+        </div>
+    
+        <div class="submit-container">
+            <button type="submit" form="create-user" [disabled]="formGroup.pending">Create User</button>
+        </div>
+    </form>
+</div>

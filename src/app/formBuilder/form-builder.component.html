@@ -1,0 +1,95 @@
+<div class="container">
+    <div *ngIf="errorsFound" class="errors">
+        <app-form-errors  [errors]="errors"></app-form-errors>
+    </div>
+    
+    <form id="create-user-two" class="form" [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <h2>Multiple FormGroups With FormBuilder</h2>
+        <div class="form-section" formGroupName="personal">
+            <div class="cell">
+                <mat-form-field>
+                    <mat-label>First Name</mat-label>
+                    <input matInput type="text" formControlName="firstName">
+                </mat-form-field>
+            </div>
+    
+            <div class="cell">
+                <mat-form-field>
+                    <mat-label>Last Name</mat-label>
+                    <input matInput type="text" formControlName="lastName">
+                </mat-form-field>
+            </div>
+    
+            <div class="cell">
+                <mat-form-field>
+                    <mat-label>Address</mat-label>
+                    <input matInput type="text" formControlName="address">
+                </mat-form-field>
+            </div>
+        </div>
+        
+        <div class="contact-container">
+            <div class="array-container" formArrayName="emails">
+                <div class="form-section" *ngFor="let email of emailControls; let x = index" [formGroupName]="x">
+                    <div class="cell">
+                        <mat-form-field>
+                            <mat-label>Email {{ x + 1 }}</mat-label>
+                            <input matInput type="text" formControlName="email">
+                        </mat-form-field>
+                    </div>
+    
+                    <div class="cell">
+                        <mat-checkbox formControlName="isPrimary">Primary</mat-checkbox>
+                    </div>
+    
+                    <div class="cell">
+                        <button type="button" (click)="removeEmail(x)">Remove Email</button>
+                    </div>
+                </div>
+                <button type="button" (click)="addEmail()">Add Email</button>
+            </div>
+    
+            <div class="array-container" formArrayName="phoneNumbers">
+                <div class="form-section" *ngFor="let phone of phoneControls; let x = index" [formGroupName]="x">
+                    <div class="cell">
+                        <mat-form-field>
+                            <mat-label>Phone {{ x + 1 }}</mat-label>
+                            <input matInput type="text" formControlName="phoneNumber">
+                        </mat-form-field>
+                    </div>
+    
+                    <div class="cell">
+                        <mat-checkbox formControlName="isPrimary">Primary</mat-checkbox>
+                    </div>
+    
+                    <div class="cell">
+                        <button type="button" (click)="removePhoneNumber(x)">Remove Phone</button>
+                    </div>
+                </div>
+                <button type="button" (click)="addPhoneNumber()">Add Phone</button>
+            </div>
+        </div>
+    
+        <div class="form-section" formGroupName="characterInfo">
+            <div class="cell">
+                <mat-form-field>
+                    <mat-label>Class</mat-label>
+                    <mat-select formControlName="class">
+                        <mat-option *ngFor="let class of classes" [value]="class.id">{{ class.name }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+    
+            <div class="cell">
+                <mat-form-field>
+                    <mat-label>Level</mat-label>
+                    <input matInput type="number" formControlName="level">
+                </mat-form-field>
+            </div>
+        </div>
+    
+        <div class="submit-container">
+            <button type="submit" form="create-user-two" [disabled]="formGroup.pending">Create User</button>
+        </div>
+    </form>
+</div>
